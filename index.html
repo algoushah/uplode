@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>☁️ تخزيني - Imgur</title>
+    <title>☁️ تخزيني - Cloudinary</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -20,114 +20,72 @@
             margin-bottom: 30px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
-        .main-card {
+        .upload-area {
             background: white;
-            border-radius: 25px;
-            padding: 40px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.2);
-        }
-        .drop-area {
-            border: 4px dashed #ff6b6b;
             border-radius: 20px;
-            padding: 80px 40px;
+            padding: 50px;
             text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        .upload-btn {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s;
-            background: linear-gradient(135deg, #fff5f5 0%, #fffbeb 100%);
-        }
-        .drop-area:hover, .drop-area.dragover {
-            border-color: #feca57;
-            background: linear-gradient(135deg, #fff0f0 0%, #fff5e6 100%);
-            transform: scale(1.02);
-        }
-        .drop-area .icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            display: block;
-        }
-        .drop-area h2 { color: #333; margin-bottom: 10px; }
-        .drop-area p { color: #666; }
-        #fileInput { display: none; }
-        
-        .uploading {
-            display: none;
-            text-align: center;
-            padding: 30px;
-        }
-        .uploading .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid #ffe0e0;
-            border-top-color: #ff6b6b;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .result {
-            display: none;
-            background: #f0fff4;
-            border: 2px solid #48bb78;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 20px;
-        }
-        .result h3 { color: #48bb78; margin-bottom: 15px; }
-        .link-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .link-container input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 14px;
-            direction: ltr;
-            background: white;
-        }
-        .action-btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
+            font-size: 1.3em;
             font-weight: bold;
             transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(17,153,142,0.4);
         }
-        .copy-btn { background: #ff6b6b; color: white; }
-        .copy-btn:hover { background: #ee5a5a; }
-        .open-btn { background: #feca57; color: #333; }
-        .open-btn:hover { background: #f0b90b; }
-        
-        .gallery {
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(17,153,142,0.5);
+        }
+        #fileInput { display: none; }
+        .preview-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
             margin-top: 30px;
         }
-        .item {
+        .preview-card {
             background: white;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            transition: transform 0.3s;
+            animation: slideUp 0.5s ease;
         }
-        .item:hover { transform: translateY(-5px); }
-        .item img {
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .preview-card img, .preview-card video {
             width: 100%;
-            height: 180px;
+            height: 200px;
             object-fit: cover;
         }
-        .item-info {
-            padding: 15px;
+        .card-body {
+            padding: 20px;
         }
-        .item-info button {
-            width: 100%;
-            padding: 12px;
-            background: #ff6b6b;
+        .link-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .link-row input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 12px;
+            direction: ltr;
+        }
+        .copy-btn {
+            padding: 10px 20px;
+            background: #11998e;
             color: white;
             border: none;
             border-radius: 8px;
@@ -135,20 +93,31 @@
             font-weight: bold;
             transition: all 0.3s;
         }
-        .item-info button:hover { background: #ee5a5a; }
-        
+        .copy-btn:hover { background: #0d7a6e; }
+        .copy-btn.copied { background: #38ef7d; }
+        .progress-ring {
+            display: none;
+            margin: 20px auto;
+            width: 60px;
+            height: 60px;
+            border: 5px solid #e0e0e0;
+            border-top-color: #11998e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .toast {
             position: fixed;
-            bottom: 30px;
+            top: 30px;
             left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #48bb78;
+            transform: translateX(-50%) translateY(-100px);
+            background: #38ef7d;
             color: white;
             padding: 15px 40px;
             border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
             font-weight: bold;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             z-index: 1000;
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
@@ -156,136 +125,105 @@
 </head>
 <body>
     <div class="container">
-        <h1>☁️ تخزيني - Imgur</h1>
+        <h1>☁️ تخزيني - Cloudinary</h1>
         
-        <div class="main-card">
-            <div class="drop-area" id="dropArea">
-                <span class="icon">📸</span>
-                <h2>ارفع صورتك أو فيديوك</h2>
-                <p>اسحب الملف هنا أو اضغط للاختيار</p>
-            </div>
-            <input type="file" id="fileInput" accept="image/*,video/*">
-            
-            <div class="uploading" id="uploading">
-                <div class="spinner"></div>
-                <h3>⏳ جاري الرفع إلى Imgur...</h3>
-            </div>
-            
-            <div class="result" id="result">
-                <h3>🎉 تم الرفع بنجاح!</h3>
-                <div class="link-container">
-                    <input type="text" id="linkInput" readonly>
-                    <button class="action-btn copy-btn" onclick="copyLink()">📋 نسخ</button>
-                </div>
-                <div class="link-container">
-                    <input type="text" id="directInput" readonly placeholder="رابط مباشر...">
-                    <button class="action-btn copy-btn" onclick="copyDirect()">📋 نسخ مباشر</button>
-                    <button class="action-btn open-btn" onclick="openLink()">🔗 فتح</button>
-                </div>
-            </div>
+        <div class="upload-area">
+            <label class="upload-btn" for="fileInput">
+                📤 اختر الملفات للرفع
+            </label>
+            <input type="file" id="fileInput" accept="image/*,video/*" multiple>
+            <p style="margin-top: 15px; color: #666;">أو اسحب الملفات هنا</p>
+            <div class="progress-ring" id="loader"></div>
         </div>
 
-        <div class="gallery" id="gallery"></div>
+        <div class="preview-grid" id="previewGrid"></div>
     </div>
 
     <div class="toast" id="toast">✅ تم النسخ!</div>
 
     <script>
-        // ⚠️ اختياري: ضع Client ID من Imgur (أو استخدمه بدون)
-        const CLIENT_ID = 'your-client-id'; // اختياري - يمكن الرفع بدونه
+        // ⚠️ ضع بيانات Cloudinary هنا
+        const CLOUD_NAME = 'dbic9mpi7';
+        const UPLOAD_PRESET = 'media_upload'; // أنشئه من الإعدادات
         
-        const dropArea = document.getElementById('dropArea');
         const fileInput = document.getElementById('fileInput');
-        const uploading = document.getElementById('uploading');
-        const result = document.getElementById('result');
-        const linkInput = document.getElementById('linkInput');
-        const directInput = document.getElementById('directInput');
-        const gallery = document.getElementById('gallery');
+        const previewGrid = document.getElementById('previewGrid');
+        const loader = document.getElementById('loader');
+
+        fileInput.addEventListener('change', handleFiles);
 
         // Drag & Drop
-        dropArea.addEventListener('click', () => fileInput.click());
-        dropArea.addEventListener('dragover', (e) => {
+        document.addEventListener('dragover', e => e.preventDefault());
+        document.addEventListener('drop', e => {
             e.preventDefault();
-            dropArea.classList.add('dragover');
-        });
-        dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
-        dropArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length) uploadFile(e.dataTransfer.files[0]);
-        });
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length) uploadFile(e.target.files[0]);
+            handleFiles({ target: { files: e.dataTransfer.files } });
         });
 
-        async function uploadFile(file) {
-            uploading.style.display = 'block';
-            result.style.display = 'none';
+        async function handleFiles(e) {
+            const files = Array.from(e.target.files);
+            loader.style.display = 'block';
             
+            for (let file of files) {
+                await uploadToCloudinary(file);
+            }
+            
+            loader.style.display = 'none';
+            fileInput.value = '';
+        }
+
+        async function uploadToCloudinary(file) {
             const formData = new FormData();
-            formData.append('image', file);
-            
-            const headers = CLIENT_ID !== 'your-client-id' 
-                ? { 'Authorization': `Client-ID ${CLIENT_ID}` }
-                : {};
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
             
             try {
-                const response = await fetch('https://api.imgur.com/3/image', {
-                    method: 'POST',
-                    headers: headers,
-                    body: formData
-                });
+                const response = await fetch(
+                    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`,
+                    { method: 'POST', body: formData }
+                );
                 
                 const data = await response.json();
                 
-                if (data.success) {
-                    linkInput.value = data.data.link;
-                    directInput.value = data.data.link;
-                    result.style.display = 'block';
-                    
-                    addToGallery(data.data.link, file.name);
-                    showToast('✅ تم الرفع بنجاح!');
-                } else {
-                    throw new Error('فشل الرفع');
+                if (data.secure_url) {
+                    addPreviewCard(data.secure_url, file.name, data.resource_type);
                 }
             } catch (err) {
-                // بدون Client ID قد يحتاج CORS proxy
-                alert('❌ خطأ: جرب تسجيل Client ID من Imgur أو استخدم الخيار الأول/الثاني');
-            } finally {
-                uploading.style.display = 'none';
+                alert('❌ خطأ في الرفع: ' + err.message);
             }
         }
 
-        function addToGallery(url, name) {
-            const item = document.createElement('div');
-            item.className = 'item';
-            item.innerHTML = `
-                <img src="${url}" alt="${name}" loading="lazy">
-                <div class="item-info">
-                    <p style="font-size: 12px; color: #666; margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis;">${name}</p>
-                    <button onclick="copyGalleryLink('${url}')">📋 نسخ الرابط</button>
+        function addPreviewCard(url, name, type) {
+            const card = document.createElement('div');
+            card.className = 'preview-card';
+            
+            const media = type === 'video' 
+                ? `<video src="${url}" controls></video>`
+                : `<img src="${url}" alt="${name}" loading="lazy">`;
+            
+            card.innerHTML = `
+                ${media}
+                <div class="card-body">
+                    <p style="font-size: 13px; color: #666; margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis;">${name}</p>
+                    <div class="link-row">
+                        <input type="text" value="${url}" readonly id="link-${Date.now()}">
+                        <button class="copy-btn" onclick="copyLink(this, '${url}')">نسخ</button>
+                    </div>
                 </div>
             `;
-            gallery.insertBefore(item, gallery.firstChild);
+            
+            previewGrid.insertBefore(card, previewGrid.firstChild);
         }
 
-        function copyLink() {
-            navigator.clipboard.writeText(linkInput.value);
-            showToast('✅ تم نسخ الرابط!');
-        }
-
-        function copyDirect() {
-            navigator.clipboard.writeText(directInput.value);
-            showToast('✅ تم نسخ الرابط المباشر!');
-        }
-
-        function copyGalleryLink(url) {
+        function copyLink(btn, url) {
             navigator.clipboard.writeText(url);
-            showToast('✅ تم النسخ!');
-        }
-
-        function openLink() {
-            window.open(linkInput.value, '_blank');
+            btn.textContent = '✅ تم!';
+            btn.classList.add('copied');
+            showToast('✅ تم نسخ الرابط!');
+            
+            setTimeout(() => {
+                btn.textContent = 'نسخ';
+                btn.classList.remove('copied');
+            }, 2000);
         }
 
         function showToast(msg) {
